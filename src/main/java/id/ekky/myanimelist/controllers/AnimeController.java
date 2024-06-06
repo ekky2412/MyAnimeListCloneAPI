@@ -24,8 +24,8 @@ public class AnimeController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<AnimeListDTO>> getAll(AnimeFilterDTO dto){
-        return new ResponseEntity<>(animeService.getAll(dto), HttpStatusCode.valueOf(200));
+    public ResponseEntity<List<AnimeListDTO>> getAll(AnimeFilterDTO params){
+        return new ResponseEntity<>(animeService.getAll(params), HttpStatusCode.valueOf(200));
     }
 
     @GetMapping("{id}")
