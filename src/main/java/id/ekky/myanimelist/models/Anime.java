@@ -36,11 +36,8 @@ public class Anime {
     private Integer rank;
     private Integer popularity;
     private Integer favorites;
-    @Column(name = "scored_by")
     private Integer scoredBy;
     private Integer members;
-    @Column(name = "image_url")
     private String imageUrl;
-    @Column(name = "is_hentai")
     private Boolean isHentai;
 }
