@@ -3,6 +3,7 @@ package id.ekky.myanimelist.services;
 import id.ekky.myanimelist.dtos.anime.AnimeDetailDTO;
 import id.ekky.myanimelist.dtos.anime.AnimeFilterDTO;
 import id.ekky.myanimelist.dtos.anime.AnimeListDTO;
+import id.ekky.myanimelist.exceptions.EntityNotFoundException;
 import id.ekky.myanimelist.repositories.AnimeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,7 +44,7 @@ public class AnimeService {
     public AnimeDetailDTO getDetail(Integer id){
 //        TODO ADD EXCEPTION
         var anime = animeRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Id Not Found!")
+                () -> new EntityNotFoundException("Anime Id Not Found!")
         );
 
         return AnimeDetailDTO.builder()
