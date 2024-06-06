@@ -5,11 +5,16 @@ import id.ekky.myanimelist.dtos.anime.AnimeFilterDTO;
 import id.ekky.myanimelist.dtos.anime.AnimeListDTO;
 import id.ekky.myanimelist.exceptions.EntityNotFoundException;
 import id.ekky.myanimelist.repositories.AnimeRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -20,13 +25,13 @@ public class AnimeService {
         this.animeRepository = animeRepository;
     }
 
-    public List<AnimeListDTO> getAll(AnimeFilterDTO dto){
+    public List<AnimeListDTO> getAll(AnimeFilterDTO dto) {
         String name = dto.getName() == null || dto.getName().isBlank() ? null : dto.getName();
         String genre = dto.getGenre() == null || dto.getGenre().isBlank() ? null : dto.getGenre();
         Integer year = dto.getYear() == null ? null : dto.getYear();
         Boolean adultContent = dto.getAdultContent() == null ? null : dto.getAdultContent();
 
-        int pageNumber = dto.getPageNumber() == null ? 0 : dto.getPageNumber()-1;
+        int pageNumber = dto.getPageNumber() == null ? 0 : dto.getPageNumber() - 1;
         int pageSize = dto.getPageSize() == null ? 10 : dto.getPageSize();
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -44,7 +49,7 @@ public class AnimeService {
                         .build()).toList();
     }
 
-    public AnimeDetailDTO getDetail(Integer id){
+    public AnimeDetailDTO getDetail(Integer id) {
 //        TODO ADD EXCEPTION
         var anime = animeRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Anime Id Not Found!")
@@ -70,5 +75,29 @@ public class AnimeService {
                 .favorites(anime.getFavorites())
                 .imageUrl(anime.getImageUrl())
                 .build();
+    }
+
+    public byte[] getImageFromId(Integer id) throws IOException {
+        var imageLink = animeRepository.findImageUrlFromId(id).orElseThrow(
+                () -> new EntityNotFoundException("Anime Id not found!")
+        );
+        URL url = new URL(imageLink);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+
+        try (InputStream inputStream = connection.getInputStream()) {
+            return readBytesFromInputStream(inputStream);
+        }
+    }
+
+    private byte[] readBytesFromInputStream(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        return outputStream.toByteArray();
     }
 }

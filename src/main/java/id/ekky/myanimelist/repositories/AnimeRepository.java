@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface AnimeRepository extends JpaRepository<Anime, Integer> {
     @Query("""
             SELECT a FROM Anime a
@@ -30,4 +32,12 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer> {
             @Param("year") Integer year,
             @Param("isHentai") Boolean isHentai
             );
+
+    @Query("""
+            SELECT a.imageUrl FROM Anime a
+            WHERE a.id = :id
+            """)
+    public Optional<String> findImageUrlFromId(
+            @Param("id") Integer id
+    );
 }
