@@ -21,12 +21,16 @@ public class AnimeService {
     }
 
     public List<AnimeListDTO> getAll(AnimeFilterDTO dto){
-        String checkedName = dto.getName() == null || dto.getName().isBlank() ? null : dto.getName();
+        String name = dto.getName() == null || dto.getName().isBlank() ? null : dto.getName();
+        String genre = dto.getGenre() == null || dto.getGenre().isBlank() ? null : dto.getGenre();
+        Integer year = dto.getYear() == null ? null : dto.getYear();
+        Boolean adultContent = dto.getAdultContent() == null ? null : dto.getAdultContent();
+
         int pageNumber = dto.getPageNumber() == null ? 0 : dto.getPageNumber()-1;
         int pageSize = dto.getPageSize() == null ? 10 : dto.getPageSize();
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        var animes = animeRepository.findAll(pageable, checkedName).map(
+        return animeRepository.findAll(pageable, name, genre, year, adultContent).map(
                 anime -> AnimeListDTO.builder()
                         .id(anime.getId())
                         .title(anime.getTitle())
@@ -38,7 +42,6 @@ public class AnimeService {
                         .imageUrl(anime.getImageUrl())
                         .isHentai(anime.getIsHentai())
                         .build()).toList();
-        return animes;
     }
 
     public AnimeDetailDTO getDetail(Integer id){

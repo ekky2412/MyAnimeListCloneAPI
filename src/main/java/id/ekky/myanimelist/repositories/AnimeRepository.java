@@ -12,9 +12,22 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer> {
             SELECT a FROM Anime a
             WHERE (:name IS NULL
                 OR a.title LIKE %:name%)
+                AND
+                (:genre IS NULL
+                OR a.genres LIKE %:genre%)
+                AND
+                (:year IS NULL
+                OR a.premiered LIKE %:year%)
+                AND
+                (:isHentai IS NULL
+                OR a.isHentai = :isHentai)
             ORDER BY a.id
             """)
     public Page<Anime> findAll(
             Pageable pageable,
-            @Param("name") String name);
+            @Param("name") String name,
+            @Param("genre") String genre,
+            @Param("year") Integer year,
+            @Param("isHentai") Boolean isHentai
+            );
 }

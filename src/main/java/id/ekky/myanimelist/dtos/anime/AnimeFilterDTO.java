@@ -9,4 +9,7 @@ public class AnimeFilterDTO {
     private final Integer pageNumber;
     private final Integer pageSize;
     private final String name;
+    private final String genre;
+    private final Integer year;
+    private final Boolean adultContent;
 }
