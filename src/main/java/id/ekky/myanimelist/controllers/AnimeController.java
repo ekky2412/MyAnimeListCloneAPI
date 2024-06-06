@@ -29,7 +29,7 @@ public class AnimeController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AnimeDetailDTO> getAll(@PathVariable Integer id){
+    public ResponseEntity<AnimeDetailDTO> getDetail(@PathVariable Integer id){
         return new ResponseEntity<>(animeService.getDetail(id), HttpStatusCode.valueOf(200));
     }
 
