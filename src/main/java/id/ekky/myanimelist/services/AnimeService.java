@@ -1,5 +1,6 @@
 package id.ekky.myanimelist.services;
 
+import id.ekky.myanimelist.dtos.anime.AnimeDetailDTO;
 import id.ekky.myanimelist.dtos.anime.AnimeFilterDTO;
 import id.ekky.myanimelist.dtos.anime.AnimeListDTO;
 import id.ekky.myanimelist.repositories.AnimeRepository;
@@ -37,5 +38,33 @@ public class AnimeService {
                         .isHentai(anime.getIsHentai())
                         .build()).toList();
         return animes;
+    }
+
+    public AnimeDetailDTO getDetail(Integer id){
+//        TODO ADD EXCEPTION
+        var anime = animeRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Id Not Found!")
+        );
+
+        return AnimeDetailDTO.builder()
+                .id(anime.getId())
+                .title(anime.getTitle())
+                .score(anime.getScore())
+                .genres(anime.getGenres())
+                .synopsis(anime.getSynopsis())
+                .type(anime.getType())
+                .episodes(anime.getEpisodes())
+                .status(anime.getStatus())
+                .producers(anime.getProducers().split(", "))
+                .licensors(anime.getLicensors().split(", "))
+                .studios(anime.getStudios().split(", "))
+                .source(anime.getSource())
+                .duration(anime.getDuration())
+                .rating(anime.getRating())
+                .rank(anime.getRank())
+                .popularity(anime.getPopularity())
+                .favorites(anime.getFavorites())
+                .imageUrl(anime.getImageUrl())
+                .build();
     }
 }
