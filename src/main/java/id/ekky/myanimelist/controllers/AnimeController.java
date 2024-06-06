@@ -32,4 +32,6 @@ public class AnimeController {
     public ResponseEntity<AnimeDetailDTO> getAll(@PathVariable Integer id){
         return new ResponseEntity<>(animeService.getDetail(id), HttpStatusCode.valueOf(200));
     }
+
+
 }
