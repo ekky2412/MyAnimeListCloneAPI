@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class AnimeFilterDTO {
-    private final Integer pageNumber;
+    private final String page;
     private final Integer pageSize;
     private final String name;
     private final String genre;

@@ -5,6 +5,7 @@ import id.ekky.myanimelist.dtos.anime.AnimeFilterDTO;
 import id.ekky.myanimelist.dtos.anime.AnimeListDTO;
 import id.ekky.myanimelist.exceptions.EntityNotFoundException;
 import id.ekky.myanimelist.repositories.AnimeRepository;
+import id.ekky.myanimelist.utility.FormatHelper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -31,8 +31,17 @@ public class AnimeService {
         Integer year = dto.getYear() == null ? null : dto.getYear();
         Boolean adultContent = dto.getAdultContent() == null ? null : dto.getAdultContent();
 
-        int pageNumber = dto.getPageNumber() == null ? 0 : dto.getPageNumber() - 1;
-        int pageSize = dto.getPageSize() == null ? 10 : dto.getPageSize();
+        int pageSize;
+        if (dto.getPage() != null &&
+                !FormatHelper.isNumeric(dto.getPage()) &&
+                dto.getPage().equals("all")) {
+            pageSize = (int) animeRepository.count();
+        } else {
+            pageSize = dto.getPageSize() == null ? 10 : dto.getPageSize();
+        }
+
+        int pageNumber = !FormatHelper.isNumeric(dto.getPage()) ? 0 : FormatHelper.toInt(dto.getPage()) - 1;
+
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return animeRepository.findAll(pageable, name, genre, year, adultContent).map(
