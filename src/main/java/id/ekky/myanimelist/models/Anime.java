@@ -1,10 +1,9 @@
 package id.ekky.myanimelist.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,4 +39,7 @@ public class Anime {
     private Integer members;
     private String imageUrl;
     private Boolean isHentai;
+
+    @OneToMany(mappedBy = "anime")
+    private List<UserAnime> userAnimeList;
 }
