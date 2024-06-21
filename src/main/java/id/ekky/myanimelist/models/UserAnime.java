@@ -15,10 +15,13 @@ public class UserAnime {
     private UserAnimeId id;
 
     @ManyToOne
+    @MapsId("userId")
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @ManyToOne
+    @MapsId("animeId")
     @JoinColumn(name = "anime_id", nullable = false)
     private Anime anime;
+
     private Integer rating;
 }
